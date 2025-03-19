@@ -30,3 +30,5 @@ class DataPreparation:
             print("Kształt obrazów:", images.shape)
             print("Kształt etykiet:", labels.shape)
             break
+
+        return train_loader, val_loader, test_loader
