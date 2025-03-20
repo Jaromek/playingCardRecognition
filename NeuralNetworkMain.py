@@ -1,4 +1,5 @@
 import torch
+from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
@@ -77,7 +78,7 @@ class ConvNN(nn.Module):
             nn.MaxPool2d(kernel_size=2, stride=2)
         )
         self.classifier = nn.Sequential(
-            nn.Linear(256 * 4 * 4, 1024),
+            nn.Linear(256 * 28 * 28, 1024),
             nn.ReLU(inplace=True),
             nn.Dropout(0.5),
             nn.Linear(1024, num_classes)
@@ -108,42 +109,72 @@ class EvaluateNN:
     def train(model, train_loader, optimizer, criterion, device):
         model.train()
         running_loss = 0.0
-        for batch_idx, (inputs, targets) in enumerate(train_loader):
+        progress_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc="Trening", leave=True)
+
+        for batch_idx, (inputs, targets) in progress_bar:
             inputs, targets = inputs.to(device), targets.to(device)
+
             optimizer.zero_grad()
             outputs = model(inputs)
             loss = criterion(outputs, targets)
             loss.backward()
             optimizer.step()
+
             running_loss += loss.item()
-            if (batch_idx+1) % 100 == 0:
-                print(f"Batch {batch_idx+1}, Strata: {running_loss/100:.4f}")
+
+            if (batch_idx + 1) % 100 == 0:
+                progress_bar.set_postfix(strata=running_loss / 100)
                 running_loss = 0.0
+
 
     def test(model, test_loader, criterion, device):
         model.eval()
         test_loss = 0.0
         correct = 0
         total = 0
+        progress_bar = tqdm(test_loader, total=len(test_loader), desc="Testowanie", leave=True)
+
         with torch.no_grad():
-            for inputs, targets in test_loader:
+            for inputs, targets in progress_bar:
                 inputs, targets = inputs.to(device), targets.to(device)
                 outputs = model(inputs)
                 loss = criterion(outputs, targets)
+
                 test_loss += loss.item()
                 _, predicted = outputs.max(1)
                 total += targets.size(0)
                 correct += predicted.eq(targets).sum().item()
-        print(f"Testowa strata: {test_loss/len(test_loader):.4f}, Dokładność: {100.*correct/total:.2f}%")
 
-    # num_epochs = 10
-    # for epoch in range(num_epochs):
-    #     print(f"Epoka: {epoch+1}/{num_epochs}")
-    #     train(model, train_loader, optimizer, criterion, device)
-    #     test(model, test_loader, criterion, device)
+                progress_bar.set_postfix(strata=test_loss / len(test_loader), dokladnosc=100. * correct / total)
+
+        print(f"Testowa strata: {test_loss / len(test_loader):.4f}, Dokładność: {100. * correct / total:.2f}%")
+
+
+
 
 if __name__ == '__main__':
-    print(f"Używane urządzenie: {EvaluateNN.device}")
-    model = ConvNN(num_classes=10).to(EvaluateNN.device)
+    BATCH_SIZE = 32
+    IMAGE_SIZE = (224, 224)
+    dir_path = 'I:/playingCards'
+    TRAIN_PATH = f'{dir_path}/train'
+    VAL_PATH = f'{dir_path}/valid'
+    TEST_PATH = f'{dir_path}/test'
+
+    device = EvaluateNN.device
+    print(f"Używane urządzenie: {device}")
+
+    train_loader, val_loader, test_loader = DataPreparation(TRAIN_PATH, VAL_PATH, TEST_PATH).prepare_data()
+
+    num_classes = len(train_loader.dataset.classes)
+    print(f"Liczba klas: {num_classes}")
+
+    model = ConvNN(num_classes=num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+    num_epochs = 10
+    for epoch in range(num_epochs):
+        print(f"Epoka: {epoch+1}/{num_epochs}")
+        EvaluateNN.train(model, train_loader, optimizer, criterion, device)
+        
+    EvaluateNN.test(model, test_loader, criterion, device)
