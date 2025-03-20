@@ -49,6 +49,19 @@ class DataPreparation:
 
         return train_loader, val_loader, test_loader
 
+class DataAugmentation:
+    def __init__(self, train_loader, val_loader, test_loader, deg):
+        self.train_loader = train_loader
+        self.val_loader = val_loader
+        self.test_loader = test_loader
+        self.deg = deg
+    
+    def augment_data(self):
+        return transforms.Compose([
+        transforms.RandomHorizontalFlip(p=1.0),  
+        transforms.RandomRotation(degrees=self.sdeg)    
+    ])
+
 class ConvNN(nn.Module):
     def __init__(self, num_classes=10):
         super(ConvNN, self).__init__()
