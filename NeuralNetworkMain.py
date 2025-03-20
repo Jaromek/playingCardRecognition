@@ -25,17 +25,37 @@ class DataPreparation:
         Argumenty funkcji są inicjalizowane w konstruktorze klasy, a w samej funkcji możemy
         jedyne co to wyświetlić kształty obrazów i etykiet pod zmienną data_shape, która domyślnie
         jest ustawiona na True.
+
+        transform - przetwarzanie i augmentacja obrazów
+        train_dataset - zbiór treningowy
+        val_dataset - zbiór walidacyjny
+        test_dataset - zbiór testowy
+        train_loader - obiekt DataLoader dla zbioru treningowego
+        val_loader - obiekt DataLoader dla zbioru walidacyjnego
+        test_loader - obiekt DataLoader dla zbioru testowego
         """
 
-        transform = transforms.Compose([
-            transforms.Resize(self.IMAGE_SIZE),
+            
+        train_transform = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomRotation(15),
+            transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),
+            transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),  # Dodanie translacji
+            transforms.RandomPerspective(distortion_scale=0.2, p=0.5),  # Dodanie perspektywy
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
-        train_dataset = datasets.ImageFolder(root=self.TRAIN_PATH, transform=transform)
-        val_dataset = datasets.ImageFolder(root=self.VAL_PATH, transform=transform)
-        test_dataset = datasets.ImageFolder(root=self.TEST_PATH, transform=transform)
+        val_test_transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
+
+        train_dataset = datasets.ImageFolder(root=self.TRAIN_PATH, transform=train_transform)
+        val_dataset = datasets.ImageFolder(root=self.VAL_PATH, transform=val_test_transform)
+        test_dataset = datasets.ImageFolder(root=self.TEST_PATH, transform=val_test_transform)
 
         train_loader = DataLoader(train_dataset, batch_size=self.BATCH_SIZE, shuffle=True, num_workers=4)
         val_loader = DataLoader(val_dataset, batch_size=self.BATCH_SIZE, shuffle=False, num_workers=4)
@@ -56,11 +76,7 @@ class DataAugmentation:
         self.test_loader = test_loader
         self.deg = deg
     
-    def augment_data(self):
-        return transforms.Compose([
-        transforms.RandomHorizontalFlip(p=1.0),  
-        transforms.RandomRotation(degrees=self.sdeg)    
-    ])
+
 
 class ConvNN(nn.Module):
     def __init__(self, num_classes=10):
@@ -73,7 +89,8 @@ class ConvNN(nn.Module):
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            
+            nn.Dropout(0.3),
+
             nn.Conv2d(64, 128, kernel_size=3, padding=1),
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
@@ -81,6 +98,7 @@ class ConvNN(nn.Module):
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Dropout(0.4),
 
             nn.Conv2d(128, 256, kernel_size=3, padding=1),
             nn.BatchNorm2d(256),
@@ -88,18 +106,22 @@ class ConvNN(nn.Module):
             nn.Conv2d(256, 256, kernel_size=3, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2)
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Dropout(0.4),
+
+            nn.AdaptiveAvgPool2d((1, 1))
         )
+
         self.classifier = nn.Sequential(
-            nn.Linear(256 * 28 * 28, 1024),
+            nn.Linear(256, 512),
             nn.ReLU(inplace=True),
             nn.Dropout(0.5),
-            nn.Linear(1024, num_classes)
+            nn.Linear(512, num_classes)
         )
-        
+
     def forward(self, x):
         x = self.features(x)
-        x = x.view(x.size(0), -1)
+        x = torch.flatten(x, 1)
         x = self.classifier(x)
         return x
 
@@ -112,11 +134,6 @@ class EvaluateNN:
         self.test_loader = test_loader
         self.optimizer = optimizer
         self.criterion = criterion
-    
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-    ])
 
     def train(model, train_loader, optimizer, criterion, device):
         model.train()
@@ -153,7 +170,7 @@ class EvaluateNN:
                 loss = criterion(outputs, targets)
 
                 test_loss += loss.item()
-                _, predicted = outputs.max(1)
+                _, predicted = torch.max(torch.softmax(outputs, dim=1), 1)
                 total += targets.size(0)
                 correct += predicted.eq(targets).sum().item()
 
@@ -182,11 +199,13 @@ if __name__ == '__main__':
 
     model = ConvNN(num_classes=num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=1e-4)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 
     num_epochs = 10
     for epoch in range(num_epochs):
         print(f"Epoka: {epoch+1}/{num_epochs}")
         EvaluateNN.train(model, train_loader, optimizer, criterion, device)
-        
-    EvaluateNN.test(model, test_loader, criterion, device)
+        EvaluateNN.test(model, test_loader, criterion, device)
+        scheduler.step()
+    
