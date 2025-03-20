@@ -90,7 +90,6 @@ class ConvNN(nn.Module):
         x = self.classifier(x)
         return x
 
-
 class EvaluateNN:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
