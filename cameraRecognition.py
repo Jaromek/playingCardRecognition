@@ -7,6 +7,8 @@ from NeuralNetworkMain import ConvNN
 import os
 from collections import deque
 
+poprawa = True
+
 def main():
     MODEL_PATH = 'acc81.5/best_model.pth'
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -28,6 +30,7 @@ def main():
         "three of clubs", "three of diamonds", "three of hearts", "three of spades",
         "two of clubs", "two of diamonds", "two of hearts", "two of spades"
     ]
+
     
     num_classes = 53 if len(classes) > 53 else len(classes)
     model = ConvNN(num_classes=num_classes)
