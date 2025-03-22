@@ -5,6 +5,8 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 class DataPreparation:
@@ -82,41 +84,60 @@ class ConvNN(nn.Module):
     def __init__(self, num_classes=10):
         super(ConvNN, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=3, padding=1),
+            # Block 1
+            nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
-            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Dropout(0.3),
 
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
-            nn.Conv2d(128, 128, kernel_size=3, padding=1),
+            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=2, stride=2), 
             nn.Dropout(0.4),
 
-            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
-            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.Conv2d(256, 256, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(256),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),  
+            nn.Dropout(0.4),
+            
+            nn.Conv2d(256, 512, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # Output: 14x14
+            nn.Dropout(0.5),
+
+            nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(512),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(512),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Dropout(0.4),
+            nn.Dropout(0.5),
 
             nn.AdaptiveAvgPool2d((1, 1))
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(256, 512),
+            nn.Linear(512, 1024),
             nn.ReLU(inplace=True),
             nn.Dropout(0.5),
-            nn.Linear(512, num_classes)
+            nn.Linear(1024, num_classes)
         )
 
     def forward(self, x):
@@ -176,7 +197,11 @@ class EvaluateNN:
 
                 progress_bar.set_postfix(strata=test_loss / len(test_loader), dokladnosc=100. * correct / total)
 
-        print(f"Testowa strata: {test_loss / len(test_loader):.4f}, Dokładność: {100. * correct / total:.2f}%")
+            dokladnosc = 100. * correct / total
+
+        print(f"Testowa strata: {test_loss / len(test_loader):.4f}, Dokładność: {dokladnosc}%")
+
+        return dokladnosc
 
 
 
@@ -202,10 +227,22 @@ if __name__ == '__main__':
     optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 
-    num_epochs = 10
+    dokladnosc = []
+
+    num_epochs = 100
     for epoch in range(num_epochs):
         print(f"Epoka: {epoch+1}/{num_epochs}")
         EvaluateNN.train(model, train_loader, optimizer, criterion, device)
-        EvaluateNN.test(model, test_loader, criterion, device)
+        dokl = EvaluateNN.test(model, test_loader, criterion, device)
         scheduler.step()
+
+        dokladnosc.append(dokl)
+
+    plt.figure(figsize=(10, 5))
+    sns.lineplot(x=range(1, num_epochs + 1), y=dokladnosc, markers="o", palette="gist_rainbow")
+    plt.xlabel("Epoka")
+    plt.ylabel("Dokładność")
+    plt.title("Dokładność modelu w kolejnych epokach")
+    plt.show()
+
     
