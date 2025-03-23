@@ -2,34 +2,29 @@ import cv2
 import torch
 import numpy as np
 from PIL import Image
-import torchvision.transforms as transforms
-from NeuralNetworkMain import ConvNN
+from NeuralNetworkMain import ConvNN, datasets, transforms
 import os
 from collections import deque
 
 poprawa = True
 
 def main():
+    DIR_PATH = 'I:/playingCards'
+    TEST_PATH = f'{DIR_PATH}/test'
+    BATCH_SIZE = 32
     MODEL_PATH = 'acc81.5/best_model.pth'
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    classes = [
-        "ace of clubs", "ace of diamonds", "ace of hearts", "ace of spades",
-        "eight of clubs", "eight of diamonds", "eight of hearts", "eight of spades",
-        "five of clubs", "five of diamonds", "five of hearts", "five of spades",
-        "four of clubs", "four of diamonds", "four of hearts", "four of spades",
-        "jack of clubs", "jack of diamonds", "jack of hearts", "jack of spades",
-        "joker",
-        "king of clubs", "king of diamonds", "king of hearts", "king of spades",
-        "nine of clubs", "nine of diamonds", "nine of hearts", "nine of spades",
-        "queen of clubs", "queen of diamonds", "queen of hearts", "queen of spades",
-        "seven of clubs", "seven of diamonds", "seven of hearts", "seven of spades",
-        "six of clubs", "six of diamonds", "six of hearts", "six of spades",
-        "ten of clubs", "ten of diamonds", "ten of hearts", "ten of spades",
-        "three of clubs", "three of diamonds", "three of hearts", "three of spades",
-        "two of clubs", "two of diamonds", "two of hearts", "two of spades"
-    ]
+    val_test_transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    ])
+
+    test_dataset = datasets.ImageFolder(root=TEST_PATH, transform=val_test_transform)
+    classes = test_dataset.classes
+
 
     
     num_classes = 53 if len(classes) > 53 else len(classes)
