@@ -1,5 +1,6 @@
 from NeuralNetworkMain import DataLoader, EvaluateNN, ConvNN, torch, datasets, transforms, nn, plt, sns
-
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import numpy as np
 
 if __name__ == '__main__':
     MODEL_PATH = 'acc81.5/best_model.pth'
@@ -26,6 +27,9 @@ if __name__ == '__main__':
     subset_size = len(test_dataset) // num_splits
     dokladnosc = []
 
+    all_preds = []
+    all_targets = []
+
     for i in range(num_splits):
         indices = list(range(i * subset_size, (i + 1) * subset_size))
         subset = torch.utils.data.Subset(test_dataset, indices)
@@ -34,9 +38,27 @@ if __name__ == '__main__':
         dokl = EvaluateNN.test(model, subset_loader, criterion, device)
         dokladnosc.append(dokl)
 
+        with torch.no_grad():
+            for images, labels in subset_loader:
+                images = images.to(device)
+                labels = labels.to(device)
+                outputs = model(images)
+                _, predicted = torch.max(outputs, 1)
+
+                all_preds.extend(predicted.cpu().numpy())
+                all_targets.extend(labels.cpu().numpy())
+
+    # Macierz konfuzji
+    cm = confusion_matrix(all_targets, all_preds)
+    plt.figure(figsize=(12, 10))
+    sns.heatmap(cm, annot=False, cmap='Blues', fmt='g')
+    plt.xticks([], [])
+    plt.yticks([], [])
+    plt.show()
+
+    # Dokładność na wykresie
     plt.figure(figsize=(10, 5))
     sns.lineplot(x=range(1, num_splits + 1), y=dokladnosc, markers="o", palette="gist_rainbow")
-    plt.xlabel("Podzbiór testowy")
-    plt.ylabel("Dokładność")
-    plt.title("Dokładność modelu na różnych fragmentach zbioru testowego")
+    plt.xticks([], [])
+    plt.yticks([], [])
     plt.show()

@@ -6,8 +6,6 @@ from NeuralNetworkMain import ConvNN, datasets, transforms
 import os
 from collections import deque
 
-poprawa = True
-
 def main():
     DIR_PATH = 'I:/playingCards'
     TEST_PATH = f'{DIR_PATH}/test'

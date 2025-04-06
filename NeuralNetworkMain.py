@@ -43,8 +43,8 @@ class DataPreparation:
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomRotation(15),
             transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),
-            transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),  # Dodanie translacji
-            transforms.RandomPerspective(distortion_scale=0.2, p=0.5),  # Dodanie perspektywy
+            transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),
+            transforms.RandomPerspective(distortion_scale=0.2, p=0.5),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
@@ -84,7 +84,7 @@ class ConvNN(nn.Module):
     def __init__(self, num_classes=10):
         super(ConvNN, self).__init__()
         self.features = nn.Sequential(
-            # Block 1
+           
             nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
@@ -229,7 +229,7 @@ if __name__ == '__main__':
 
     dokladnosc = []
 
-    num_epochs = 100
+    num_epochs = 150
     for epoch in range(num_epochs):
         print(f"Epoka: {epoch+1}/{num_epochs}")
         EvaluateNN.train(model, train_loader, optimizer, criterion, device)
@@ -240,9 +240,6 @@ if __name__ == '__main__':
 
     plt.figure(figsize=(10, 5))
     sns.lineplot(x=range(1, num_epochs + 1), y=dokladnosc, markers="o", palette="gist_rainbow")
-    plt.xlabel("Epoka")
-    plt.ylabel("Dokładność")
-    plt.title("Dokładność modelu w kolejnych epokach")
     plt.show()
 
     
