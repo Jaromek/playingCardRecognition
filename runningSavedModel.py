@@ -4,7 +4,7 @@ import numpy as np
 
 if __name__ == '__main__':
     MODEL_PATH = 'acc81.5/best_model.pth'
-    DIR_PATH = 'I:/playingCards'
+    DIR_PATH = 'dataset'
     TRAIN_PATH = f'{DIR_PATH}/train'
     BATCH_SIZE = 32
 
@@ -48,15 +48,23 @@ if __name__ == '__main__':
                 all_preds.extend(predicted.cpu().numpy())
                 all_targets.extend(labels.cpu().numpy())
 
-    # Macierz konfuzji
-    cm = confusion_matrix(all_targets, all_preds)
-    plt.figure(figsize=(12, 10))
-    sns.heatmap(cm, annot=False, cmap='Blues', fmt='g')
+
+    def map_to_binary_class(label):
+
+        return 0 if label < 27 else 1
+
+    binary_preds = [map_to_binary_class(pred) for pred in all_preds]
+    binary_targets = [map_to_binary_class(target) for target in all_targets]
+
+    cm = confusion_matrix(binary_targets, binary_preds)
+
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(cm, annot=True, cmap='Blues', fmt='g')
     plt.xticks([], [])
     plt.yticks([], [])
     plt.show()
 
-    # Dokładność na wykresie
+
     plt.figure(figsize=(10, 5))
     sns.lineplot(x=range(1, num_splits + 1), y=dokladnosc, markers="o", palette="gist_rainbow")
     plt.xticks([], [])
