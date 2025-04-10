@@ -49,17 +49,10 @@ if __name__ == '__main__':
                 all_targets.extend(labels.cpu().numpy())
 
 
-    def map_to_binary_class(label):
-
-        return 0 if label < 27 else 1
-
-    binary_preds = [map_to_binary_class(pred) for pred in all_preds]
-    binary_targets = [map_to_binary_class(target) for target in all_targets]
-
-    cm = confusion_matrix(binary_targets, binary_preds)
+    cm = confusion_matrix(all_targets, all_preds)
 
     plt.figure(figsize=(6, 5))
-    sns.heatmap(cm, annot=True, cmap='Blues', fmt='g')
+    sns.heatmap(cm, annot=False, cmap='Blues', fmt='g')
     plt.xticks([], [])
     plt.yticks([], [])
     plt.show()
