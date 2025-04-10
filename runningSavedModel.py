@@ -48,6 +48,16 @@ if __name__ == '__main__':
                 all_preds.extend(predicted.cpu().numpy())
                 all_targets.extend(labels.cpu().numpy())
 
+    def map_to_color(label: list) -> list:
+        color_map = ("red", "black")
+
+    def map_to_suits(label: list) -> list:
+        suits_map = ("spades", "hearts", "diamonds", "clubs")
+
+    def map_to_ranks(label: list) -> list:
+        ranks_map = ("2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A")
+        return [ranks_map[l] for l in label]
+
 
     cm = confusion_matrix(all_targets, all_preds)
 
