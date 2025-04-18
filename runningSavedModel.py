@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix
 
 if __name__ == '__main__':
     MODEL_PATH = 'acc81.5/best_model.pth'
-    DIR_PATH = 'I:/playingCards'
+    DIR_PATH = 'dataset'
     TRAIN_PATH = f'{DIR_PATH}/train'
     BATCH_SIZE = 32
 

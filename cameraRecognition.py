@@ -5,7 +5,7 @@ from NeuralNetworkMain import ConvNN, datasets, transforms
 from collections import deque
 
 def main():
-    DIR_PATH = 'I:/playingCards'
+    DIR_PATH = 'dataset'
     TEST_PATH = f'{DIR_PATH}/test'
     BATCH_SIZE = 32
     MODEL_PATH = 'acc81.5/best_model.pth'
