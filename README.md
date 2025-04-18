@@ -101,11 +101,12 @@ The script will activate your webcam and start recognizing visible cards in real
 ![confusion-matrix-all](acc81.5/conf_matrix_all.png)
 ```
 
-### ♠️♥️♦️♣️ Confusion Matrices – Color / Rank / Suit:
+### ♠️♥️♦️♣️ Confusion Matrices – Color / Rank / Suit / All:
 ```
-![confusion-color](acc81.5/conf_matrix_color.png)
-![confusion-rank](acc81.5/conf_matrix_rank.png)
-![confusion-suit](acc81.5/conf_matrix_suit.png)
+![confusion-color](acc81.5/confusionMatrix/redBlackCM.png)
+![confusion-rank](acc81.5/confusionMatrix/englishFigureCM.png)
+![confusion-suit](acc81.5/confusionMatrix/englishCardColorCM.png)
+![confusion-all](acc81.5/confusionMatrix/allCardsCM.png)
 ```
 
 ---
