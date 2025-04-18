@@ -1,6 +1,6 @@
 from PIL import Image
 import torchvision.transforms.functional as F
-from NeuralNetworkMain import torch, datasets, transforms, plt
+from neuralNetworkMain import torch, datasets, transforms, plt
 import torch
 import os 
 
