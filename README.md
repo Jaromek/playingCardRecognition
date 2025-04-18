@@ -87,25 +87,16 @@ The script will activate your webcam and start recognizing visible cards in real
 ## 🖼️ Results (Examples)
 
 ### 🔍 Live Recognition Sample:
-```
-![live-demo](acc81.5/live_demo.png)
-```
+![live-demoEOD](acc81.5/liveRecognition/EOD98.5.png)
+![live-demoKOD](acc81.5/liveRecognition/KOD95.3.png)
+
 
 ### 📈 Training / Validation Curve:
-```
-![training-curve](acc81.5/loss_curve.png)
-```
+![training-curve](acc81.5/modelAccTrainingNNdokladnoscepoka.png)
 
-### 🔁 Confusion Matrix – Full Classes:
-```
-![confusion-matrix-all](acc81.5/conf_matrix_all.png)
-```
-
-### ♠️♥️♦️♣️ Confusion Matrices – Color / Rank / Suit / All:
-![confusion-color](acc81.5/confusionMatrix/redBlackCM.png)
+### ♠️♥️♦️♣️ Confusion Matrices – Rank / Suit:
 ![confusion-rank](acc81.5/confusionMatrix/englishFigureCM.png)
 ![confusion-suit](acc81.5/confusionMatrix/englishCardColorCM.png)
-![confusion-all](acc81.5/confusionMatrix/allCardsCM.png)
 
 ---
 
