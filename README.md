@@ -99,6 +99,9 @@ The script will activate your webcam and start recognizing visible cards in real
 
 
 ### 📈 Training / Validation Curve:
+<p>
+  <img src="acc81.5/modelAccTrainingNNdokladnoscepoka.png" width="400" alt="Validation Curve"/>
+</p>
 ![training-curve](acc81.5/modelAccTrainingNNdokladnoscepoka.png)
 
 ### ♠️♥️♦️♣️ Confusion Matrices – Rank / Suit:
