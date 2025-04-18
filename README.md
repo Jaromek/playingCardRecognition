@@ -95,8 +95,11 @@ The script will activate your webcam and start recognizing visible cards in real
 ![training-curve](acc81.5/modelAccTrainingNNdokladnoscepoka.png)
 
 ### ♠️♥️♦️♣️ Confusion Matrices – Rank / Suit:
-![confusion-rank](acc81.5/confusionMatrix/englishFigureCM.png)
-![confusion-suit](acc81.5/confusionMatrix/englishCardColorCM.png)
+<p align="center">
+  <img src="acc81.5/confusionMatrix/englishFigureCM.png" width="400" alt="Confusion Matrix – Rank"/>
+  <img src="acc81.5/confusionMatrix/englishCardColorCM.png" width="400" alt="Confusion Matrix – Suit"/>
+</p>
+
 
 ---
 
