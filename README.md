@@ -110,8 +110,6 @@ The script will activate your webcam and start recognizing visible cards in real
 <p align="center">
   <img src="acc81.5/confusionMatrix/englishCardColorCM.png" width="800" alt="confusion-suit"/>
 </p>
-![confusion-rank](acc81.5/confusionMatrix/englishFigureCM.png)
-![confusion-suit](acc81.5/confusionMatrix/englishCardColorCM.png)
 
 
 ---
