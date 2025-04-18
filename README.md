@@ -87,18 +87,19 @@ The script will activate your webcam and start recognizing visible cards in real
 ## 🖼️ Results (Examples)
 
 ### 🔍 Live Recognition Sample:
-![live-demoEOD](acc81.5/liveRecognition/EOD98.5.png)
-![live-demoKOD](acc81.5/liveRecognition/KOD95.3.png)
+<p align="center">
+  <img src="acc81.5/liveRecognition/EOD98.5.png" width="400" alt="Live Demo – EOD 98.5%"/>
+  <img src="acc81.5/liveRecognition/KOD95.3.png" width="400" alt="Live Demo – KOD 95.3%"/>
+</p>
+
 
 
 ### 📈 Training / Validation Curve:
 ![training-curve](acc81.5/modelAccTrainingNNdokladnoscepoka.png)
 
 ### ♠️♥️♦️♣️ Confusion Matrices – Rank / Suit:
-<p align="center">
-  <img src="acc81.5/confusionMatrix/englishFigureCM.png" width="400" alt="Confusion Matrix – Rank"/>
-  <img src="acc81.5/confusionMatrix/englishCardColorCM.png" width="400" alt="Confusion Matrix – Suit"/>
-</p>
+![confusion-rank](acc81.5/confusionMatrix/englishFigureCM.png)
+![confusion-suit](acc81.5/confusionMatrix/englishCardColorCM.png)
 
 
 ---
