@@ -21,7 +21,7 @@ A deep learning project for playing card recognition using Convolutional Neural 
 
 ## 🛠️ Requirements
 
-- Python ≥ 3.12  
+- Python = 3.12.9  
 - PyTorch  
 - torchvision  
 - scikit-learn  
