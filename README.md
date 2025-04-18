@@ -21,7 +21,7 @@ A deep learning project for playing card recognition using Convolutional Neural 
 
 ## 🛠️ Requirements
 
-- Python ≥ 3.10  
+- Python ≥ 3.12  
 - PyTorch  
 - torchvision  
 - scikit-learn  
@@ -39,8 +39,6 @@ pip install torch torchvision scikit-learn matplotlib seaborn opencv-python
 
 ## 🗂️ Dataset Structure
 
-Place your dataset inside the `dataset/` directory, structured as follows:
-
 ```
 dataset/
 ├── train/
@@ -48,7 +46,7 @@ dataset/
 └── test/
 ```
 
-Each subfolder should contain one folder per card class, e.g., `AH/`, `10C/`, `QS/`, etc., with images inside.
+Each subfolder should contain one folder per card class with images inside.
 
 ---
 
@@ -68,7 +66,7 @@ Use the `modelTesting.ipynb` notebook to:
   - Color
   - Rank
   - Suit
-  - Full classes (e.g., "AH", "10S")
+  - Full classes
 
 ---
 
