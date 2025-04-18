@@ -1,55 +1,123 @@
-# Playing Card Recognition
+# 🃏 Playing Card Recognition
 
-This project implements a deep learning pipeline for recognizing playing cards using convolutional neural networks (CNNs) in PyTorch. It includes scripts for training, evaluating, and testing models, as well as tools for live camera-based recognition.
+A deep learning project for playing card recognition using Convolutional Neural Networks (CNNs) in PyTorch. Includes scripts for training, evaluation, testing, and real-time camera-based recognition.
 
-## Project Structure
+---
 
-cameraRecognition.py # Live camera card recognition script modelTesting.ipynb # Jupyter notebook for model evaluation and visualization NeuralNetworkMain.py # Main neural network architecture, training, and utility functions transform.py # Data augmentation and transformation utilities acc81.5 # Directory with trained models, results, and visualizations dataset/ # Dataset directory (train/valid/test splits) README.md # Project documentation pycache/ # Python cache files
+## 📁 Project Structure
 
+```
+├── cameraRecognition.py       # Real-time card recognition via webcam
+├── modelTesting.ipynb         # Model evaluation and visualization notebook
+├── NeuralNetworkMain.py       # Neural network architecture, training, and utilities
+├── transform.py               # Data augmentation and transformation helpers
+├── acc81.5/                   # Trained models, results, plots, and confusion matrices
+├── dataset/                   # Dataset (train/valid/test splits)
+├── README.md                  # Project documentation
+└── __pycache__/               # Python cache
+```
 
-## Getting Started
+---
 
-### Requirements
+## 🛠️ Requirements
 
-- Python 3.10+
-- PyTorch
-- torchvision
-- scikit-learn
-- matplotlib
-- seaborn
-- OpenCV (for camera recognition)
+- Python ≥ 3.10  
+- PyTorch  
+- torchvision  
+- scikit-learn  
+- matplotlib  
+- seaborn  
+- OpenCV  
 
-Install dependencies with:
+Install all dependencies with:
 
-```sh
+```
 pip install torch torchvision scikit-learn matplotlib seaborn opencv-python
 ```
 
-Dataset
-Place your dataset in the dataset/ directory with the following structure:
+---
 
+## 🗂️ Dataset Structure
+
+Place your dataset inside the `dataset/` directory, structured as follows:
+
+```
 dataset/
-    train/
-    valid/
-    test/
+├── train/
+├── valid/
+└── test/
+```
 
-    Each subdirectory should contain one folder per card class, with images inside.
+Each subfolder should contain one folder per card class, e.g., `AH/`, `10C/`, `QS/`, etc., with images inside.
 
-Training
-Train the neural network using the functions in NeuralNetworkMain.py.
+---
 
-Model Evaluation
-Use modelTesting.ipynb to:
+## 🧠 Model Training
 
-Load a trained model (acc81.5/best_model.pth)
-Evaluate accuracy on the dataset
-Generate and visualize confusion matrices for color, suit, rank, and all classes
-Live Recognition
-Run cameraRecognition.py to recognize cards in real-time using your webcam.
+Train your neural network using the functions in `NeuralNetworkMain.py`.
 
-Results
-Trained models, accuracy plots, and confusion matrices are saved in the acc81.5/ directory.
+---
 
-License
-This project is for educational and research purposes.
+## 📊 Model Evaluation
 
+Use the `modelTesting.ipynb` notebook to:
+
+- Load the best model (`acc81.5/best_model.pth`)
+- Evaluate accuracy on the test set
+- Generate and visualize confusion matrices for:
+  - Color
+  - Rank
+  - Suit
+  - Full classes (e.g., "AH", "10S")
+
+---
+
+## 🎥 Real-Time Recognition
+
+Run the following command:
+
+```
+python cameraRecognition.py
+```
+
+The script will activate your webcam and start recognizing visible cards in real time.
+
+---
+
+## 🖼️ Results (Examples)
+
+### 🔍 Live Recognition Sample:
+```
+![live-demo](acc81.5/live_demo.png)
+```
+
+### 📈 Training / Validation Curve:
+```
+![training-curve](acc81.5/loss_curve.png)
+```
+
+### 🔁 Confusion Matrix – Full Classes:
+```
+![confusion-matrix-all](acc81.5/conf_matrix_all.png)
+```
+
+### ♠️♥️♦️♣️ Confusion Matrices – Color / Rank / Suit:
+```
+![confusion-color](acc81.5/conf_matrix_color.png)
+![confusion-rank](acc81.5/conf_matrix_rank.png)
+![confusion-suit](acc81.5/conf_matrix_suit.png)
+```
+
+---
+
+## 📦 Contents of `acc81.5/`
+
+- `best_model.pth` — best performing trained model
+- Training/validation loss and accuracy plots
+- Confusion matrices for various categories
+
+---
+
+## 📄 License
+
+This project is intended for educational and research purposes only.
