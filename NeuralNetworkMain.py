@@ -21,21 +21,22 @@ class DataPreparation:
     def prepare_data(self, data_shape=True):
 
         """
-        Funkcja przygotowująca dane do trenowania sieci neuronowej.
-        Zwraca obiekty DataLoader dla zbiorów treningowego, walidacyjnego i testowego.
-        Dane są przygotowywane pod bibliotekę PyTorch. 
-        Argumenty funkcji są inicjalizowane w konstruktorze klasy, a w samej funkcji możemy
-        jedyne co to wyświetlić kształty obrazów i etykiet pod zmienną data_shape, która domyślnie
-        jest ustawiona na True.
+        Function for preparing data to train a neural network.
+        Returns DataLoader objects for the training, validation, and test datasets.
+        The data is prepared for the PyTorch library.
+        The function arguments are initialized in the class constructor, and within the function
+        we can only display the shapes of the images and labels under the variable `data_shape`,
+        which is set to True by default.
 
-        transform - przetwarzanie i augmentacja obrazów
-        train_dataset - zbiór treningowy
-        val_dataset - zbiór walidacyjny
-        test_dataset - zbiór testowy
-        train_loader - obiekt DataLoader dla zbioru treningowego
-        val_loader - obiekt DataLoader dla zbioru walidacyjnego
-        test_loader - obiekt DataLoader dla zbioru testowego
+        transform - image preprocessing and augmentation  
+        train_dataset - training dataset  
+        val_dataset - validation dataset  
+        test_dataset - test dataset  
+        train_loader - DataLoader object for the training dataset  
+        val_loader - DataLoader object for the validation dataset  
+        test_loader - DataLoader object for the test dataset  
         """
+
 
             
         train_transform = transforms.Compose([
@@ -65,8 +66,8 @@ class DataPreparation:
 
         if data_shape:
             for images, labels in train_loader:
-                print("Kształt obrazów:", images.shape)
-                print("Kształt etykiet:", labels.shape)
+                print("Images shape:", images.shape)
+                print("Labels shape:", labels.shape)
                 break
 
         return train_loader, val_loader, test_loader
@@ -118,7 +119,7 @@ class ConvNN(nn.Module):
             nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
             nn.BatchNorm2d(512),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # Output: 14x14
+            nn.MaxPool2d(kernel_size=2, stride=2), 
             nn.Dropout(0.5),
 
             nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
@@ -159,7 +160,7 @@ class EvaluateNN:
     def train(model, train_loader, optimizer, criterion, device):
         model.train()
         running_loss = 0.0
-        progress_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc="Trening", leave=True)
+        progress_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc="Training", leave=True)
 
         for batch_idx, (inputs, targets) in progress_bar:
             inputs, targets = inputs.to(device), targets.to(device)
@@ -173,7 +174,7 @@ class EvaluateNN:
             running_loss += loss.item()
 
             if (batch_idx + 1) % 100 == 0:
-                progress_bar.set_postfix(strata=running_loss / 100)
+                progress_bar.set_postfix(l=running_loss / 100)
                 running_loss = 0.0
 
 
@@ -182,7 +183,7 @@ class EvaluateNN:
         test_loss = 0.0
         correct = 0
         total = 0
-        progress_bar = tqdm(test_loader, total=len(test_loader), desc="Testowanie", leave=True)
+        progress_bar = tqdm(test_loader, total=len(test_loader), desc="Testing", leave=True)
 
         with torch.no_grad():
             for inputs, targets in progress_bar:
@@ -195,13 +196,13 @@ class EvaluateNN:
                 total += targets.size(0)
                 correct += predicted.eq(targets).sum().item()
 
-                progress_bar.set_postfix(strata=test_loss / len(test_loader), dokladnosc=100. * correct / total)
+                progress_bar.set_postfix(l=test_loss / len(test_loader), accuracy=100. * correct / total)
 
-            dokladnosc = 100. * correct / total
+            accuracy = 100. * correct / total
 
-        print(f"Testowa strata: {test_loss / len(test_loader):.4f}, Dokładność: {dokladnosc}%")
+        print(f"Test loss: {test_loss / len(test_loader):.4f}, Accuracy: {accuracy}%")
 
-        return dokladnosc
+        return accuracy
 
 
 
@@ -215,31 +216,31 @@ if __name__ == '__main__':
     TEST_PATH = f'{dir_path}/test'
 
     device = EvaluateNN.device
-    print(f"Używane urządzenie: {device}")
+    print(f"Used device: {device}")
 
     train_loader, val_loader, test_loader = DataPreparation(TRAIN_PATH, VAL_PATH, TEST_PATH).prepare_data()
 
     num_classes = len(train_loader.dataset.classes)
-    print(f"Liczba klas: {num_classes}")
+    print(f"Class number: {num_classes}")
 
     model = ConvNN(num_classes=num_classes).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 
-    dokladnosc = []
+    accuracy = []
 
     num_epochs = 150
     for epoch in range(num_epochs):
-        print(f"Epoka: {epoch+1}/{num_epochs}")
+        print(f"Epoch: {epoch+1}/{num_epochs}")
         EvaluateNN.train(model, train_loader, optimizer, criterion, device)
-        dokl = EvaluateNN.test(model, test_loader, criterion, device)
+        acc = EvaluateNN.test(model, test_loader, criterion, device)
         scheduler.step()
 
-        dokladnosc.append(dokl)
+        accuracy.append(acc)
 
     plt.figure(figsize=(10, 5))
-    sns.lineplot(x=range(1, num_epochs + 1), y=dokladnosc, markers="o", palette="gist_rainbow")
+    sns.lineplot(x=range(1, num_epochs + 1), y=accuracy, markers="o", palette="gist_rainbow")
     plt.show()
 
     
