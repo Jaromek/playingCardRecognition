@@ -91,6 +91,10 @@ The script will activate your webcam and start recognizing visible cards in real
   <img src="acc81.5/liveRecognition/EOD98.5.png" width="400" alt="Live Demo – EOD 98.5%"/>
   <img src="acc81.5/liveRecognition/KOD95.3.png" width="400" alt="Live Demo – KOD 95.3%"/>
 </p>
+<p align="center">
+  <img src="acc81.5/liveRecognition/SOH75.8.png" width="400" alt="Live Demo – SOH75.8.png"/>
+  <img src="acc81.5/liveRecognition/AOS88.png" width="400" alt="Live Demo – AOS88.png"/>
+</p>
 
 
 
