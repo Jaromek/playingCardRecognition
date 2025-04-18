@@ -13,8 +13,7 @@ A deep learning project for playing card recognition using Convolutional Neural 
 ├── transform.py               # Data augmentation and transformation helpers
 ├── acc81.5/                   # Trained models, results, plots, and confusion matrices
 ├── dataset/                   # Dataset (train/valid/test splits)
-├── README.md                  # Project documentation
-└── __pycache__/               # Python cache
+└── README.md                  # Project documentation
 ```
 
 ---
