@@ -1,9 +1,7 @@
 import cv2
 import torch
-import numpy as np
 from PIL import Image
 from NeuralNetworkMain import ConvNN, datasets, transforms
-import os
 from collections import deque
 
 def main():
