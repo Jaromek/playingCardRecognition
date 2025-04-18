@@ -13,6 +13,7 @@ A deep learning project for playing card recognition using Convolutional Neural 
 ├── transform.py               # Data augmentation and transformation helpers
 ├── acc81.5/                   # Trained models, results, plots, and confusion matrices
 ├── dataset/                   # Dataset (train/valid/test splits)
+├── requirements.txt           # Liblaries and dependencies for python
 └── README.md                  # Project documentation
 ```
 
@@ -26,12 +27,14 @@ A deep learning project for playing card recognition using Convolutional Neural 
 - scikit-learn  
 - matplotlib  
 - seaborn  
-- OpenCV  
+- OpenCV
+- tqdm
+- pillow
 
 Install all dependencies with:
 
 ```
-pip install torch torchvision scikit-learn matplotlib seaborn opencv-python
+pip install -r requirements.txt
 ```
 
 ---
