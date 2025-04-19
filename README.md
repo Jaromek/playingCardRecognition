@@ -9,7 +9,7 @@ A deep learning project for playing card recognition using Convolutional Neural 
 ```
 ├── cameraRecognition.py       # Real-time card recognition via webcam
 ├── modelTesting.ipynb         # Model evaluation and visualization notebook
-├── NeuralNetworkMain.py       # Neural network architecture, training, and utilities
+├── neuralNetwork.py           # Neural network architecture, training, and utilities
 ├── transform.py               # Data augmentation and transformation helpers
 ├── acc81.5/                   # Trained models, results, plots, and confusion matrices
 ├── dataset/                   # Dataset (train/valid/test splits)
@@ -22,14 +22,6 @@ A deep learning project for playing card recognition using Convolutional Neural 
 ## 🛠️ Requirements
 
 - Python = 3.12.9  
-- PyTorch  
-- torchvision  
-- scikit-learn  
-- matplotlib  
-- seaborn  
-- OpenCV
-- tqdm
-- pillow
 
 Install all dependencies with:
 
