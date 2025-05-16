@@ -13,23 +13,9 @@ A deep learning project for playing card recognition using Convolutional Neural 
 ├── transform.py               # Data augmentation and transformation helpers
 ├── acc81.5/                   # Trained models, results, plots, and confusion matrices
 ├── dataset/                   # Dataset (train/valid/test splits)
-├── requirements.txt           # Liblaries and dependencies for python
 └── README.md                  # Project documentation
 ```
 
----
-
-## 🛠️ Requirements
-
-- Python = 3.12.9  
-
-Install all dependencies with:
-
-```
-pip install -r requirements.txt
-```
-
----
 
 ## 🗂️ Dataset Structure
 
